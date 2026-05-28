@@ -235,3 +235,44 @@ export async function fetchActivityPageData() {
   ])
   return { clients, statsMeta, globalStats }
 }
+
+// ─── Animals ──────────────────────────────────────────────────────────────────
+
+// For each client that has client_stats, fetch their top_animals list.
+// Used on the animal detail page to show which clients drew a given animal.
+export type ClientAnimalData = {
+  clientId: number
+  clientName: string
+  topAnimals: [string, number][]
+}
+
+export async function fetchAllClientAnimalData(): Promise<ClientAnimalData[]> {
+  const { data: statsRows } = await supabase
+    .from("client_stats")
+    .select("client_id, top_animals")
+
+  if (!statsRows?.length) return []
+
+  const { data: clientRows } = await supabase
+    .from("clients")
+    .select("id, name")
+    .in("id", statsRows.map((r: { client_id: number }) => r.client_id))
+
+  const nameMap = Object.fromEntries(
+    (clientRows ?? []).map((c: { id: number; name: string }) => [c.id, c.name])
+  )
+
+  return statsRows.map((r: { client_id: number; top_animals: [string, number][] }) => ({
+    clientId: r.client_id,
+    clientName: nameMap[r.client_id] ?? `Client #${r.client_id}`,
+    topAnimals: r.top_animals ?? [],
+  }))
+}
+
+export async function fetchAnimalsPageData() {
+  const [globalStats, clientAnimalData] = await Promise.all([
+    fetchGlobalStats(),
+    fetchAllClientAnimalData(),
+  ])
+  return { globalStats, clientAnimalData }
+}

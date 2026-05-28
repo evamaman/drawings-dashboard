@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, Users, BarChart2, Leaf, Database, Activity } from "lucide-react"
+import { LayoutDashboard, Users, BarChart2, Leaf, Database, Activity, Footprints } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const NAV_MAIN = [
@@ -12,6 +12,7 @@ const NAV_MAIN = [
 ]
 
 const NAV_EXPLORE = [
+  { href: "/animals",    label: "Animaux",      icon: Footprints },
   { href: "/ecosystems", label: "Écosystèmes",  icon: Leaf },
   { href: "/activity",   label: "Activité",     icon: Activity },
   { href: "/data",       label: "Données",      icon: Database },
