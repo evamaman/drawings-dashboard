@@ -58,7 +58,7 @@ export default function AnimalDetailPage() {
         <Header title="Animal introuvable"
           actions={<button onClick={() => router.push("/animals")} className="flex items-center gap-1.5"
             style={{ color: "#4a6a9c", fontSize: "13px" }}><ArrowLeft size={14} /> Animaux</button>} />
-        <div className="flex-1 p-8">
+        <div className="flex-1 p-4 md:p-8">
           <Card><EmptyState icon="🔍" title="Animal introuvable" message={`Aucun animal avec la clé "${key}".`} /></Card>
         </div>
       </DashboardLayout>
@@ -89,7 +89,7 @@ export default function AnimalDetailPage() {
         }
       />
 
-      <div className="flex-1 p-8 space-y-6">
+      <div className="flex-1 p-4 md:p-8 space-y-5 md:space-y-6">
         {loading ? (
           <div className="space-y-6">
             <Skeleton height={160} rounded="lg" />

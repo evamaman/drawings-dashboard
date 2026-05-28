@@ -49,7 +49,7 @@ export default function AnalyticsPage() {
     <DashboardLayout>
       <Header title="Analytics" subtitle="Données agrégées — tous clients confondus" />
 
-      <div className="flex-1 p-8 space-y-8">
+      <div className="flex-1 p-4 md:p-8 space-y-6 md:space-y-8">
 
         {/* KPIs */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -137,7 +137,7 @@ export default function AnalyticsPage() {
         {!loading && s && (
           <Card>
             <CardHeader title="Répartition des dessins" subtitle="Total vs web vs partagés" />
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
                 { label: "Dessins totaux", value: s.totalDrawings, pct: 100, color: "#00d4ff" },
                 { label: "Via application web", value: s.webDrawings, pct: Math.round((s.webDrawings / s.totalDrawings) * 100), color: "#00c9a7" },

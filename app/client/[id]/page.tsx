@@ -213,7 +213,7 @@ function NoDataDashboard({ data }: { data: ClientWithData }) {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
-        className="rounded-2xl p-8 text-center"
+        className="rounded-2xl p-5 md:p-8 text-center"
         style={{
           background: "rgba(9,20,34,0.6)",
           border: "1px dashed rgba(255,255,255,0.06)",
@@ -314,7 +314,7 @@ export default function ClientDashboardPage() {
             </button>
           }
         />
-        <div className="flex-1 p-8">
+        <div className="flex-1 p-4 md:p-8">
           <Card>
             <EmptyState
               icon="🔍"
@@ -356,7 +356,7 @@ export default function ClientDashboardPage() {
         }
       />
 
-      <div className="flex-1 p-8">
+      <div className="flex-1 p-4 md:p-8">
         {/* key=id forces remount + animations on client switch */}
         <AnimatePresence mode="wait">
           <motion.div

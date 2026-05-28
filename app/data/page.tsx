@@ -59,10 +59,10 @@ export default function DataPage() {
     <DashboardLayout>
       <Header title="Données" subtitle="Couverture et disponibilité des analytics par client" />
 
-      <div className="flex-1 p-8 space-y-8">
+      <div className="flex-1 p-4 md:p-8 space-y-6 md:space-y-8">
 
         {/* Coverage summary */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {loading ? Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} height={90} rounded="lg" />) : [
             { label: "Analytics complètes", count: full, icon: CheckCircle, color: "#10b981",
               sub: "timeline · animaux · écosystèmes" },
@@ -106,9 +106,11 @@ export default function DataPage() {
             Matrice de disponibilité par client
           </p>
           <Card padding="sm">
+            {/* overflow-x-auto so the fixed-column matrix scrolls on mobile */}
+            <div className="overflow-x-auto">
             {/* Table header */}
             <div className="grid px-5 py-3"
-              style={{ gridTemplateColumns: "2fr 90px 1fr " + METRICS.map(() => "52px").join(" "), borderBottom: "1px solid rgba(255,255,255,0.05)", gap: "8px" }}>
+              style={{ gridTemplateColumns: "2fr 90px 1fr " + METRICS.map(() => "52px").join(" "), minWidth: "640px", borderBottom: "1px solid rgba(255,255,255,0.05)", gap: "8px" }}>
               {["Client", "Statut", "Dessins", ...METRICS.map((m) => m.icon)].map((h, i) => (
                 <span key={i} style={{ fontSize: "10px", color: "#2d4a6e", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}
                   title={METRICS[i - 3]?.label}>
@@ -172,6 +174,7 @@ export default function DataPage() {
                 )
               })
             )}
+            </div>{/* end overflow-x-auto */}
           </Card>
         </div>
 

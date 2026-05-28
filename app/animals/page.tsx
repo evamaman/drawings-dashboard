@@ -173,11 +173,11 @@ export default function AnimalsPage() {
         subtitle={loading ? "Chargement…" : `${ANIMALS.length} espèces · ${withData} avec données web`}
       />
 
-      <div className="flex-1 p-8 space-y-6">
+      <div className="flex-1 p-4 md:p-8 space-y-5 md:space-y-6">
 
         {/* Summary */}
         {!loading && (
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
               { label: "Espèces au total", value: ANIMALS.length, color: "#00d4ff" },
               { label: "Avec dessins web", value: withData, color: "#10b981" },

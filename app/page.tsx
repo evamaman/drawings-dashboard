@@ -58,7 +58,7 @@ function AnalyticsCoverage({ data }: { data: PageData }) {
   ]
 
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
       {tiles.map((t, i) => (
         <motion.div
           key={t.label}
@@ -214,7 +214,7 @@ export default function GlobalDashboard() {
         }
       />
 
-      <div className="flex-1 p-8 space-y-8">
+      <div className="flex-1 p-4 md:p-8 space-y-6 md:space-y-8">
 
         {/* ── KPIs ── */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -242,7 +242,7 @@ export default function GlobalDashboard() {
             Couverture des données
           </p>
           {loading ? (
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} height={90} rounded="lg" />)}
             </div>
           ) : (
@@ -311,26 +311,31 @@ export default function GlobalDashboard() {
               </div>
             </div>
 
-            {/* Table header */}
-            <div className="grid px-5 py-2" style={{ gridTemplateColumns: "28px 2fr 1.5fr 1fr 100px 36px", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-              {["#", "Client", "Expériences", "Dessins", "Données", ""].map((h) => (
-                <span key={h} style={{ fontSize: "10px", color: "#2d4a6e", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.07em" }}>
-                  {h}
-                </span>
-              ))}
-            </div>
+            {/* Scrollable table on mobile */}
+            <div className="overflow-x-auto">
+              {/* Table header */}
+              <div className="grid px-5 py-2" style={{ gridTemplateColumns: "28px 2fr 1.5fr 1fr 100px 36px", minWidth: "560px", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                {["#", "Client", "Expériences", "Dessins", "Données", ""].map((h) => (
+                  <span key={h} style={{ fontSize: "10px", color: "#2d4a6e", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.07em" }}>
+                    {h}
+                  </span>
+                ))}
+              </div>
 
-            {/* Rows */}
-            {loading ? (
-              <div className="py-8 text-center"><p style={{ fontSize: "13px", color: "#4a6a9c" }}>Chargement…</p></div>
-            ) : withRank.length === 0 ? (
-              <div className="py-8 text-center"><p style={{ fontSize: "13px", color: "#4a6a9c" }}>Aucun client trouvé</p></div>
-            ) : (
-              withRank.map(({ client, total, rank, hasDetailedStats }) => (
-                <ClientRow key={client.id} client={client} total={total} rank={rank}
-                  hasDetailedStats={hasDetailedStats} onClick={() => router.push(`/client/${client.id}`)} />
-              ))
-            )}
+              {/* Rows */}
+              {loading ? (
+                <div className="py-8 text-center"><p style={{ fontSize: "13px", color: "#4a6a9c" }}>Chargement…</p></div>
+              ) : withRank.length === 0 ? (
+                <div className="py-8 text-center"><p style={{ fontSize: "13px", color: "#4a6a9c" }}>Aucun client trouvé</p></div>
+              ) : (
+                <div style={{ minWidth: "560px" }}>
+                  {withRank.map(({ client, total, rank, hasDetailedStats }) => (
+                    <ClientRow key={client.id} client={client} total={total} rank={rank}
+                      hasDetailedStats={hasDetailedStats} onClick={() => router.push(`/client/${client.id}`)} />
+                  ))}
+                </div>
+              )}
+            </div>
           </Card>
         </div>
 

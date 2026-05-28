@@ -49,7 +49,7 @@ export default function ActivityPage() {
     <DashboardLayout>
       <Header title="Activité" subtitle="Dernière activité enregistrée sur la plateforme" />
 
-      <div className="flex-1 p-8 space-y-8">
+      <div className="flex-1 p-4 md:p-8 space-y-6 md:space-y-8">
 
         {/* Last sync banner */}
         {!loading && globalStats?.updatedAt && (

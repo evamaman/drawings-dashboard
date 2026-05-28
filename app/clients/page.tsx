@@ -180,11 +180,11 @@ export default function ClientsPage() {
         subtitle={loading ? "Chargement…" : `${clients.length} clients enregistrés`}
       />
 
-      <div className="flex-1 p-8 space-y-6">
+      <div className="flex-1 p-4 md:p-8 space-y-5 md:space-y-6">
 
         {/* Summary */}
         {!loading && (
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
               { icon: Users, label: "Total", value: clients.length, color: "#00d4ff" },
               { icon: BarChart2, label: "Analytics complètes", value: full, color: "#10b981" },

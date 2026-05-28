@@ -48,7 +48,7 @@ export default function EcosystemsPage() {
         subtitle={`${ECOSYSTEMS.length} expériences immersives Wild Immersion`}
       />
 
-      <div className="flex-1 p-8 space-y-8">
+      <div className="flex-1 p-4 md:p-8 space-y-6 md:space-y-8">
 
         {/* Overview grid */}
         <div className="space-y-3">
