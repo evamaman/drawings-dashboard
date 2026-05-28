@@ -1,27 +1,28 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from "next"
+import { Inter } from "next/font/google"
+import "./globals.css"
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   display: "swap",
   weight: ["300", "400", "500", "600", "700"],
-});
+})
 
 export const metadata: Metadata = {
-  title: "Wild Immersion Drawings — Dashboard",
-  description: "Premium analytics and management dashboard for Wild Immersion Drawings",
-};
+  title: "Drawings Dashboard — Wild Immersion",
+  description: "Analytics dashboard for Wild Immersion Drawings",
+}
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} h-full`}>
-      <body className="h-full min-h-screen antialiased">{children}</body>
+    <html lang="fr" className={`${inter.variable} h-full`}>
+      <body
+        className="h-full antialiased"
+        style={{ background: "#050c18", color: "#e8f0fe" }}
+      >
+        {children}
+      </body>
     </html>
-  );
+  )
 }
