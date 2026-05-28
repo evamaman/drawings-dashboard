@@ -10,7 +10,6 @@ import { KpiCard } from "@/components/ui/KpiCard"
 import { Card, CardHeader } from "@/components/ui/Card"
 import { KpiCardSkeleton, ChartSkeleton, Skeleton } from "@/components/ui/Skeleton"
 import { EmptyState } from "@/components/ui/EmptyState"
-import { HourlyChart } from "@/components/charts/HourlyChart"
 import { TimelineChart } from "@/components/charts/TimelineChart"
 import { AnimalChart } from "@/components/charts/AnimalChart"
 import { EcosystemChart } from "@/components/charts/EcosystemChart"
@@ -123,29 +122,16 @@ function FullDashboard({ data }: { data: ClientWithData }) {
         </div>
       </div>
 
-      {/* Timeline + Heures */}
+      {/* Timeline */}
       <div className="space-y-3">
         <SectionLabel>Activité dans le temps</SectionLabel>
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          <div className="xl:col-span-2">
-            <Card>
-              <CardHeader
-                title="Timeline"
-                subtitle="Dessins enregistrés jour par jour"
-              />
-              <TimelineChart timeline={stats.timeline} height={200} />
-            </Card>
-          </div>
-          <div>
-            <Card>
-              <CardHeader
-                title="Par heure"
-                subtitle="Distribution des dessins web"
-              />
-              <HourlyChart byHour={stats.byHour} height={200} />
-            </Card>
-          </div>
-        </div>
+        <Card>
+          <CardHeader
+            title="Timeline"
+            subtitle="Dessins enregistrés jour par jour"
+          />
+          <TimelineChart timeline={stats.timeline} height={220} />
+        </Card>
       </div>
 
       {/* Animaux + Écosystèmes */}

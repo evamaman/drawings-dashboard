@@ -38,6 +38,43 @@ export function StatusBadge({ status }: StatusBadgeProps) {
   return <Badge label={cfg.label} color={cfg.color} />
 }
 
+// Data availability badge — shows what analytics exist for a client
+export type DataStatus = "full" | "count-only" | "no-data"
+
+const DATA_STATUS_CONFIG: Record<DataStatus, { label: string; color: string; dot: string }> = {
+  "full":       { label: "Analytics complètes", color: "#10b981", dot: "●" },
+  "count-only": { label: "Données limitées",    color: "#00d4ff", dot: "◐" },
+  "no-data":    { label: "Aucune donnée",        color: "#4a6a9c", dot: "○" },
+}
+
+export function DataStatusBadge({ status }: { status: DataStatus }) {
+  const cfg = DATA_STATUS_CONFIG[status]
+  return (
+    <span
+      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md"
+      style={{
+        background: `${cfg.color}12`,
+        border: `1px solid ${cfg.color}25`,
+        color: cfg.color,
+        fontSize: "11px",
+        fontWeight: 500,
+      }}
+    >
+      <span style={{ fontSize: "8px" }}>{cfg.dot}</span>
+      {cfg.label}
+    </span>
+  )
+}
+
+export function resolveDataStatus(
+  hasDetailedStats: boolean,
+  hasDrawingCount: boolean
+): DataStatus {
+  if (hasDetailedStats) return "full"
+  if (hasDrawingCount) return "count-only"
+  return "no-data"
+}
+
 // Resolves client status from DB data
 export function resolveClientStatus(
   isActive: boolean,

@@ -165,15 +165,25 @@ export async function fetchClientList(): Promise<
     .sort((a, b) => (b.totalDrawings ?? -1) - (a.totalDrawings ?? -1))
 }
 
+// ─── Client stats availability ────────────────────────────────────────────────
+
+// Returns the set of client IDs that have a row in client_stats.
+// Used to determine which clients have full analytics vs count-only.
+export async function fetchClientStatsIds(): Promise<Set<number>> {
+  const { data } = await supabase.from("client_stats").select("client_id")
+  return new Set((data ?? []).map((r: { client_id: number }) => r.client_id))
+}
+
 // ─── Global page combined query ───────────────────────────────────────────────
 
 // Loads everything needed for the global dashboard in parallel.
 export async function fetchGlobalPageData() {
-  const [globalStats, clients, drawingCounts] = await Promise.all([
+  const [globalStats, clients, drawingCounts, detailedIds] = await Promise.all([
     fetchGlobalStats(),
     fetchAllClients(),
     fetchDrawingCounts(),
+    fetchClientStatsIds(),
   ])
 
-  return { globalStats, clients, drawingCounts }
+  return { globalStats, clients, drawingCounts, detailedIds }
 }

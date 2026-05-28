@@ -2,27 +2,19 @@
 
 import { motion } from "framer-motion"
 import { CalendarDays, Clock, PenTool } from "lucide-react"
-import { StatusBadge, Badge, resolveClientStatus } from "@/components/ui/Badge"
+import { StatusBadge, Badge, DataStatusBadge, resolveClientStatus, resolveDataStatus } from "@/components/ui/Badge"
 import { formatNumber, formatDate, initials } from "@/lib/utils"
 import { ECOSYSTEM_BY_ID, CHART_COLORS } from "@/lib/constants"
 import type { ClientWithData } from "@/lib/types"
 
-type ClientHeroProps = {
-  data: ClientWithData
-}
-
-export function ClientHero({ data }: ClientHeroProps) {
+export function ClientHero({ data }: { data: ClientWithData }) {
   const { client, totalDrawings, detailedStats } = data
-  const status = resolveClientStatus(client.isActive, client.expiresAt)
+  const activityStatus = resolveClientStatus(client.isActive, client.expiresAt)
+  const dataStatus = resolveDataStatus(!!detailedStats, totalDrawings !== null)
 
-  // Use first ecosystem color as accent, fallback to chart color
   const firstEco = client.ecosystemIds[0] ? ECOSYSTEM_BY_ID[client.ecosystemIds[0]] : null
   const accent = firstEco?.color ?? CHART_COLORS[client.id % CHART_COLORS.length]
-
-  const ecos = client.ecosystemIds
-    .map((id) => ECOSYSTEM_BY_ID[id])
-    .filter(Boolean)
-
+  const ecos = client.ecosystemIds.map((id) => ECOSYSTEM_BY_ID[id]).filter(Boolean)
   const displayCount = detailedStats?.totalDrawings ?? totalDrawings
 
   return (
@@ -36,56 +28,45 @@ export function ClientHero({ data }: ClientHeroProps) {
         border: "1px solid rgba(255,255,255,0.06)",
       }}
     >
-      {/* Accent bar top */}
-      <div style={{ height: "3px", background: `linear-gradient(90deg, ${accent}, ${accent}44)` }} />
+      {/* Accent bar */}
+      <div style={{ height: "3px", background: `linear-gradient(90deg, ${accent}, ${accent}33)` }} />
 
       <div className="p-6">
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex items-start justify-between gap-6">
+
           {/* Left: identity */}
-          <div className="flex items-start gap-4">
-            {/* Avatar */}
+          <div className="flex items-start gap-4 min-w-0">
             <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 text-base font-bold"
-              style={{
-                background: `${accent}15`,
-                border: `1px solid ${accent}30`,
-                color: accent,
-                fontSize: "16px",
-              }}
+              className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 font-bold"
+              style={{ background: `${accent}15`, border: `1px solid ${accent}30`, color: accent, fontSize: "16px" }}
             >
               {initials(client.name)}
             </div>
 
-            {/* Name + meta */}
-            <div>
-              <div className="flex items-center gap-2.5 flex-wrap">
-                <h2
-                  style={{
-                    fontSize: "20px",
-                    fontWeight: 700,
-                    color: "#e8f0fe",
-                    letterSpacing: "-0.02em",
-                  }}
-                >
+            <div className="min-w-0">
+              {/* Name + status badges */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <h2 style={{ fontSize: "20px", fontWeight: 700, color: "#e8f0fe", letterSpacing: "-0.02em" }}>
                   {client.name}
                 </h2>
-                <StatusBadge status={status} />
+                <StatusBadge status={activityStatus} />
+                <DataStatusBadge status={dataStatus} />
               </div>
 
-              {/* Meta row */}
+              {/* Meta */}
               <div className="flex items-center gap-3 mt-1.5 flex-wrap">
-                <span style={{ fontSize: "12px", color: "#2d4a6e" }}>ID #{client.id}</span>
+                <span style={{ fontSize: "11px", color: "#2d4a6e" }}>ID #{client.id}</span>
                 <div className="flex items-center gap-1">
-                  <CalendarDays size={11} style={{ color: "#2d4a6e" }} />
-                  <span style={{ fontSize: "12px", color: "#4a6a9c" }}>
+                  <CalendarDays size={10} style={{ color: "#2d4a6e" }} />
+                  <span style={{ fontSize: "11px", color: "#4a6a9c" }}>
                     Depuis {formatDate(client.createdAt)}
                   </span>
                 </div>
                 {client.lastUsedAt && (
                   <div className="flex items-center gap-1">
-                    <Clock size={11} style={{ color: "#2d4a6e" }} />
-                    <span style={{ fontSize: "12px", color: "#4a6a9c" }}>
-                      Actif {formatDate(client.lastUsedAt)}
+                    <Clock size={10} style={{ color: "#2d4a6e" }} />
+                    <span style={{ fontSize: "11px", color: "#4a6a9c" }}>
+                      Vu le {formatDate(client.lastUsedAt)}
                     </span>
                   </div>
                 )}
@@ -95,15 +76,11 @@ export function ClientHero({ data }: ClientHeroProps) {
               {ecos.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 mt-3">
                   {ecos.slice(0, 6).map((eco) => (
-                    <Badge
-                      key={eco.id}
-                      label={`${eco.emoji} ${eco.name}`}
-                      color={eco.color}
-                    />
+                    <Badge key={eco.id} label={`${eco.emoji} ${eco.name}`} color={eco.color} />
                   ))}
                   {ecos.length > 6 && (
                     <span style={{ fontSize: "11px", color: "#4a6a9c", alignSelf: "center" }}>
-                      +{ecos.length - 6}
+                      +{ecos.length - 6} expériences
                     </span>
                   )}
                 </div>
@@ -111,33 +88,24 @@ export function ClientHero({ data }: ClientHeroProps) {
             </div>
           </div>
 
-          {/* Right: total drawings highlight */}
+          {/* Right: drawings count */}
           {displayCount !== null && (
             <div className="flex-shrink-0 text-right">
-              <div
-                className="flex items-center gap-2 justify-end mb-1"
-                style={{ color: "#2d4a6e" }}
-              >
-                <PenTool size={11} />
+              <div className="flex items-center gap-1.5 justify-end mb-1" style={{ color: "#2d4a6e" }}>
+                <PenTool size={10} />
                 <span style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.07em" }}>
                   Total dessins
                 </span>
               </div>
-              <p
-                style={{
-                  fontSize: "36px",
-                  fontWeight: 700,
-                  color: accent,
-                  letterSpacing: "-0.03em",
-                  lineHeight: 1,
-                }}
-              >
+              <p style={{ fontSize: "38px", fontWeight: 700, color: accent, letterSpacing: "-0.03em", lineHeight: 1 }}>
                 {formatNumber(displayCount)}
               </p>
               {detailedStats && (
-                <p style={{ fontSize: "11px", color: "#2d4a6e", marginTop: "4px" }}>
-                  {formatNumber(detailedStats.webDrawings)} via web
-                </p>
+                <div className="mt-1 space-y-0.5">
+                  <p style={{ fontSize: "11px", color: "#4a6a9c" }}>
+                    {formatNumber(detailedStats.webDrawings)} web · {formatNumber(detailedStats.sharedDrawings)} partagés
+                  </p>
+                </div>
               )}
             </div>
           )}
