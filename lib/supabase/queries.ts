@@ -151,6 +151,20 @@ export async function fetchClientWithData(id: number): Promise<ClientWithData | 
   return { client, totalDrawings, detailedStats }
 }
 
+// ─── Client list for switcher ─────────────────────────────────────────────────
+
+// Lightweight list used by the client switcher dropdown.
+// Returns all clients sorted by drawing count descending.
+export async function fetchClientList(): Promise<
+  { id: number; name: string; totalDrawings: number | null }[]
+> {
+  const [clients, counts] = await Promise.all([fetchAllClients(), fetchDrawingCounts()])
+  const countMap = Object.fromEntries(counts.map((c) => [c.client_id, c.total]))
+  return clients
+    .map((c) => ({ id: c.id, name: c.name, totalDrawings: countMap[c.id] ?? null }))
+    .sort((a, b) => (b.totalDrawings ?? -1) - (a.totalDrawings ?? -1))
+}
+
 // ─── Global page combined query ───────────────────────────────────────────────
 
 // Loads everything needed for the global dashboard in parallel.
