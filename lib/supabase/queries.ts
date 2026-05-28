@@ -174,16 +174,64 @@ export async function fetchClientStatsIds(): Promise<Set<number>> {
   return new Set((data ?? []).map((r: { client_id: number }) => r.client_id))
 }
 
-// ─── Global page combined query ───────────────────────────────────────────────
+// ─── Client stats metadata (light — no heavy JSON fields) ────────────────────
 
-// Loads everything needed for the global dashboard in parallel.
+export type ClientStatsMeta = {
+  client_id: number
+  total_drawings: number
+  web_drawings: number
+  shared_drawings: number
+  updated_at: string
+}
+
+export async function fetchClientStatsMeta(): Promise<ClientStatsMeta[]> {
+  const { data } = await supabase
+    .from("client_stats")
+    .select("client_id, total_drawings, web_drawings, shared_drawings, updated_at")
+  return (data ?? []) as ClientStatsMeta[]
+}
+
+// ─── Combined queries for each page ──────────────────────────────────────────
+
 export async function fetchGlobalPageData() {
   const [globalStats, clients, drawingCounts, detailedIds] = await Promise.all([
-    fetchGlobalStats(),
-    fetchAllClients(),
-    fetchDrawingCounts(),
-    fetchClientStatsIds(),
+    fetchGlobalStats(), fetchAllClients(), fetchDrawingCounts(), fetchClientStatsIds(),
   ])
-
   return { globalStats, clients, drawingCounts, detailedIds }
+}
+
+export async function fetchClientsPageData() {
+  const [clients, drawingCounts, detailedIds] = await Promise.all([
+    fetchAllClients(), fetchDrawingCounts(), fetchClientStatsIds(),
+  ])
+  return { clients, drawingCounts, detailedIds }
+}
+
+export async function fetchAnalyticsPageData() {
+  const [globalStats, clients, drawingCounts] = await Promise.all([
+    fetchGlobalStats(), fetchAllClients(), fetchDrawingCounts(),
+  ])
+  return { globalStats, clients, drawingCounts }
+}
+
+export async function fetchDataPageData() {
+  const [clients, drawingCounts, detailedIds, statsMeta, globalStats] = await Promise.all([
+    fetchAllClients(), fetchDrawingCounts(), fetchClientStatsIds(),
+    fetchClientStatsMeta(), fetchGlobalStats(),
+  ])
+  return { clients, drawingCounts, detailedIds, statsMeta, globalStats }
+}
+
+export async function fetchEcosystemsPageData() {
+  const [globalStats, clients] = await Promise.all([
+    fetchGlobalStats(), fetchAllClients(),
+  ])
+  return { globalStats, clients }
+}
+
+export async function fetchActivityPageData() {
+  const [clients, statsMeta, globalStats] = await Promise.all([
+    fetchAllClients(), fetchClientStatsMeta(), fetchGlobalStats(),
+  ])
+  return { clients, statsMeta, globalStats }
 }
